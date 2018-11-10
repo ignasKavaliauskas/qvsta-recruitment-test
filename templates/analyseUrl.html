@@ -1,4 +1,4 @@
-<h1>Results for {{ targetUrl }}</h1>
+<h1>Results for {{ targetUrl }}</h1> <a href="/index/">Analyse again</a>
 
 <h3> Version </h3> {{ version }} <br>
 <h3> Title </h3> {{ title }} <br>
@@ -14,7 +14,12 @@
 <br>
 <h3> num of external/internal links </h3> {{ numOfExternalLinks }} / {{ numOfInternalLinks }}
 <br>
-<h3>contains a form</h3>{{containsLoginForm}}
+<h3>contains a login form</h3>{{containsLoginForm}}
 <br>
+<h3>any inaccessible links?</h3> 
+{% if inaccessibleLinks > 0 %}
+    Yes. {{ inaccessibleLinks }}x
+{% else %}
+    No inaccessible links found.
+{% endif %}
 
-<br> <a href="/index/">Analyse again</a>

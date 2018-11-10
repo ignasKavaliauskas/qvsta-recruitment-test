@@ -1,11 +1,10 @@
+
+{% if error %}
+    <h3>{{ error }}</h3> <br>
+{% endif %}
 <form action="/analyseUrl/" method="POST">{% csrf_token %}
     <input type="text" name="textUrl" placeholder="http://www.google.com">
     <input type="submit" value="analyse">
 </form>
 
-<br>
-<h4>
-    {% if error != "" %}
-        {{ error }}
-    {% endif %}
-</h4>
+
