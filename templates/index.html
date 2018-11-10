@@ -2,3 +2,10 @@
     <input type="text" name="textUrl" placeholder="http://www.google.com">
     <input type="submit" value="analyse">
 </form>
+
+<br>
+<h4>
+    {% if error != "" %}
+        {{ error }}
+    {% endif %}
+</h4>

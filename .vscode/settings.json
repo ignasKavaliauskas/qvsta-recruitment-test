@@ -1,3 +1,4 @@
 {
-    "python.linting.pylintEnabled": false
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "C:\\Users\\Ignas\\.virtualenvs\\qvsta-recruitment-test-g8LIX67b\\Scripts\\python.exe"
 }
