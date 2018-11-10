@@ -17,7 +17,7 @@ Requirements:
 - pip
 - pipenv
 
-Clone this repository and run it by using these commands:
+Clone this repository and run it by using these commands:(make sure you're in the repository)
 - `pipenv install`
-- `pipenv shell` (make sure you're in the repository)
+- `pipenv shell`
 - `python manage.py runserver`
