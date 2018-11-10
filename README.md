@@ -7,7 +7,7 @@ The objective is to build a rest backend that does some analysis of a web-page/U
 - - [x] What HTML version has the document?
 - - [x] What is the page title?
 - - [x] How many headings of what level are in the document?
-- - [ ] How many internal and external links are in the document? Are there any inaccessible links and how many?
+- - [x] How many internal and external links are in the document? Are there any inaccessible links and how many?
 - - [ ] Did the page contain a login-form?
 - - [ ] Return error message in case of a unreachable URL, including HTTP status-code and some useful error description.
 
