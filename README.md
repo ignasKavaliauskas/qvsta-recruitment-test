@@ -14,8 +14,10 @@ The objective is to build a rest backend that does some analysis of a web-page/U
 # How to run
 Requirements:
 - python 3.7
+- pip
 - pipenv
 
 Clone this repository and run it by using these commands:
+- `pipenv install`
 - `pipenv shell` (make sure you're in the repository)
 - `python manage.py runserver`
