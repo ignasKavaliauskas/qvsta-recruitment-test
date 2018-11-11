@@ -1,17 +1,31 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from requests.exceptions import ConnectionError, HTTPError, InvalidURL, InvalidSchema, MissingSchema
+from django.core.cache import cache
+from requests.exceptions import ConnectionError, HTTPError
+
 import requests
 import re
 import bs4
+import json
 
-def indexView(request):
+
+def indexView(request): 
     return render(request, 'index.html')
 
 def analyseUrlView(request):
-    result = dict()
     targetUrl = request.POST['textUrl']
-    
+
+    cacheKey = targetUrl
+    cacheTime = 1000
+    cacheData = cache.get(cacheKey)
+    print(cacheData)
+
+    if cacheData:
+        result = json.loads(cacheData)
+        return render(request, 'analyseUrl.html', result)
+    else:
+        result = dict()
+
     # check URL
     try:
         r = requests.get(targetUrl)
@@ -36,7 +50,6 @@ def analyseUrlView(request):
 
 
     # grab html version of the document
-
     try:
         result['version'] = re.search(r'<!doctype .*?>', r.text, re.IGNORECASE).group()
     except:
@@ -87,7 +100,6 @@ def analyseUrlView(request):
             inaccessibleLinks.append(link[0])
     
     result['inaccessibleLinks'] = len(inaccessibleLinks)
-    print(inaccessibleLinks)
 
     # Did the page contain a login-form? 
     # Right now just checking if there is ANY form , TODO: check if the form is used for login
@@ -100,5 +112,8 @@ def analyseUrlView(request):
                 break
     except:
         result['containsLoginForm'] = 'No form found.'
+    
+    if not cacheData:
+        cache.set(cacheKey, json.dumps(result), cacheTime)
 
     return render(request, 'analyseUrl.html', result)
