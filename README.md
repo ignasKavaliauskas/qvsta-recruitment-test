@@ -10,7 +10,7 @@ The objective is to build a rest backend that does some analysis of a web-page/U
 - - [x] How many internal and external links are in the document? Are there any inaccessible links and how many?
 - - [ ] Did the page contain a login-form?
 - - [x] Return error message in case of a unreachable URL, including HTTP status-code and some useful error description.
-- [ ] Cache already loaded webpages for 24h.
+- [x] Cache already scrapped results for 24h.
 # Main steps of building my solution
 - Learn all necessary Django features and functions required for this project
 - Starting and preparing the project, createing the files, virtual enviroment and possibly required librarys
