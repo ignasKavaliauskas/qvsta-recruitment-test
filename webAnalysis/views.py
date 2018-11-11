@@ -83,8 +83,10 @@ def analyseUrlView(request):
     result['numOfExternalLinks'] = 0
     domainName = targetUrl.split('//')[-1].split('.')[1]
 
-    # check if they are internal or external links and count them
+    # find ALL links in the document
     allLinks = re.findall(r'"((http|ftp|https)s?://.*?)"', r.text, re.IGNORECASE|re.MULTILINE)
+
+    # check if they are internal or external links and count them
     for link in allLinks:
         if domainName.lower() in link[0].lower():
             result['numOfInternalLinks'] += 1
@@ -117,6 +119,7 @@ def analyseUrlView(request):
     else:
         result['containsLoginForm'] = 'No form found.'
     
+    # cache the results
     if not cacheData:
         cache.set(cacheKey, json.dumps(result), cacheTime)
 

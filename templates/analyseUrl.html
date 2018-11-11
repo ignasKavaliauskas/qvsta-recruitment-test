@@ -1,35 +1,30 @@
 {% extends "index.html" %}
-
-
 {% block content %}
+    <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+        <h3>Results for {{ targetUrl }}</h3> 
+        
+        <p><strong>HTML Version - </strong>{{ version }}</p>
+        <p><strong>Title - </strong>{{ title }}</p>
+        <p>
+            <strong>Headings</strong> <br>
+            {% for key, value in headings.items %}
+                {{ key }} - {{ value }}x <br>
+            {% empty %}
+                No headings found.
+            {% endfor %}
+        </p>
 
+        <p>
+                <strong>Internal links - </strong>{{ numOfInternalLinks }}x <br>
+                <strong>External links - </strong>{{ numOfExternalLinks }}x <br>
+                <strong>Inaccessible links - </strong>
+                {% if inaccessibleLinks > 0 %}
+                    {{ inaccessibleLinks }}x
+                {% else %}
+                    No inaccessible links found.
+                {% endif %}
+        </p>
 
-<div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-    <h3>Results for {{ targetUrl }}</h3> 
-    
-    <p><strong>HTML Version - </strong>{{ version }}</p>
-    <p><strong>Title - </strong>{{ title }}</p>
-    <p>
-        <strong>Headings</strong> <br>
-        {% for key, value in headings.items %}
-            {{ key }} - {{ value }}x <br>
-        {% empty %}
-            No headings found.
-        {% endfor %}
-    </p>
-
-    <p>
-            <strong>Internal links - </strong>{{ numOfInternalLinks }}x <br>
-            <strong>External links - </strong>{{ numOfExternalLinks }}x <br>
-            <strong>Inaccessible links - </strong>
-            {% if inaccessibleLinks > 0 %}
-                {{ inaccessibleLinks }}x
-            {% else %}
-                No inaccessible links found.
-            {% endif %}
-    </p>
-
-    <p><strong>Contains a login form? - </strong>{{ containsLoginForm }}</p>
-
-</div>
+        <p><strong>Contains a login form? - </strong>{{ containsLoginForm }}</p>
+    </div>
 {% endblock content %}
