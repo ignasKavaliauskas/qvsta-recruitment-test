@@ -21,7 +21,7 @@ The objective is to build a rest backend that does some analysis of a web-page/U
 - The biggest and most time consuming parts of the projects was getting into Django and creating/modyfing the regular expressions.
 - The biggest execution delay is caused by searching for inaccessible links.
 
-All features needs to be more tested and optimized in order guarantee full functioning. 
+All features needs to be more tested in order guarantee correct functioning.
 # How to run
 Requirements:
 - python 3.7
