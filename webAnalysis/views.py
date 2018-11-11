@@ -17,9 +17,8 @@ def analyseUrlView(request):
 
     # caching
     cacheKey = targetUrl
-    cacheTime = 1000
+    cacheTime = 86400 #seconds = 24h
     cacheData = cache.get(cacheKey)
-    print(cacheData)
 
     # load scrapped results if available
     if cacheData:
@@ -38,7 +37,6 @@ def analyseUrlView(request):
         result['targetUrl'] = targetUrl
 
     except requests.exceptions.ConnectionError as err:
-        # raised when a 
         result['error'] = 'Failed to establish a connection to {0}'.format(targetUrl)
         return render(request, 'index.html', result)
 
@@ -50,15 +48,13 @@ def analyseUrlView(request):
         result['error'] = err
         return render(request, 'index.html', result)
 
-
-    # grab html version of the document
-    try:
+    # URL is ok. Let's get the required information
+    try: # HTML version
         result['version'] = re.search(r'<!doctype .*?>', r.text, re.IGNORECASE).group()
     except:
         result['version'] = 'Version not found.'
     
-    # page title
-    try:
+    try: # Title
         rawMatch = re.search(r'<title>.*?</title>', r.text, re.IGNORECASE).group()
         result['title'] = bs4.BeautifulSoup(rawMatch, 'html.parser').string
     except:
@@ -71,14 +67,16 @@ def analyseUrlView(request):
         if(searchResult > 0):
             result['headings']['h{0}'.format(headLevel)] = searchResult
     
-    # How many internal and external links are in the document? 
-    # re_pattern = r'((http|https):\/\/(?!{0})[\w\.\/\-=?#]+)'.format(targetUrl.split('//')[1])
-    # externalLinks = re.findall(re_pattern, r.text, re.IGNORECASE|re.MULTILINE)
-    # result['numOfExternalLinks'] = len(externalLinks)
+    ## old solution ##
+        # How many internal and external links are in the document? 
+        # re_pattern = r'((http|https):\/\/(?!{0})[\w\.\/\-=?#]+)'.format(targetUrl.split('//')[1])
+        # externalLinks = re.findall(re_pattern, r.text, re.IGNORECASE|re.MULTILINE)
+        # result['numOfExternalLinks'] = len(externalLinks)
 
-    # re_pattern = r'(.*{0}.*)|(^\/.*$)'.format(targetUrl.replace('.', '\.'))
-    # internalLinks = re.findall(re_pattern, r.text, re.IGNORECASE|re.MULTILINE)
-    # result['numOfInternalLinks'] = len(internalLinks)
+        # re_pattern = r'(.*{0}.*)|(^\/.*$)'.format(targetUrl.replace('.', '\.'))
+        # internalLinks = re.findall(re_pattern, r.text, re.IGNORECASE|re.MULTILINE)
+        # result['numOfInternalLinks'] = len(internalLinks)
+    ## end old solution ##
 
     # find all links on the page
     result['numOfInternalLinks'] = 0
@@ -97,6 +95,7 @@ def analyseUrlView(request):
     # Are there any inaccessible links and how many?
     inaccessibleLinks = list()
     for link in allLinks:
+        # just ask for the header in order to save time
         statusCode = requests.head(link[0]).status_code
         if statusCode >= 400 and statusCode <= 450:
             inaccessibleLinks.append(link[0])
@@ -104,15 +103,18 @@ def analyseUrlView(request):
     result['inaccessibleLinks'] = len(inaccessibleLinks)
 
     # Did the page contain a login-form? 
-    # Right now just checking if there is ANY form , TODO: check if the form is used for login
-    try:
-        rawMatch = re.search(r'<form.*>.*<\/form>', r.text, re.IGNORECASE|re.MULTILINE)
-        loginFormKeyWords = [r'.*login.*', r'.*sign.*in.*']
+    rawMatch = re.findall(r'<form\b[^>]*>(.*?)<\/form>', r.text, re.IGNORECASE|re.MULTILINE|re.S)
+    loginFormKeyWords = [r'login', r'sign in', r'sign-in', r'username', r'password']
+    isLoginForm = False
+    for match in rawMatch:
         for keyWord in loginFormKeyWords:
-            if len(re.findall(r'{0}'.format(keyWord), rawMatch.group().lower(), re.IGNORECASE|re.MULTILINE)) > 0:
-                result['containsLoginForm'] = True
+            if keyWord in match.lower():
+                isLoginForm = True
                 break
-    except:
+    
+    if isLoginForm:
+        result['containsLoginForm'] = 'Yes.'
+    else:
         result['containsLoginForm'] = 'No form found.'
     
     if not cacheData:
