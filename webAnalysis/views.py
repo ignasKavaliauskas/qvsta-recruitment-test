@@ -15,11 +15,13 @@ def indexView(request):
 def analyseUrlView(request):
     targetUrl = request.POST['textUrl']
 
+    # caching
     cacheKey = targetUrl
     cacheTime = 1000
     cacheData = cache.get(cacheKey)
     print(cacheData)
 
+    # load scrapped results if available
     if cacheData:
         result = json.loads(cacheData)
         return render(request, 'analyseUrl.html', result)
